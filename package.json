@@ -1,0 +1,36 @@
+{
+  "name": "curseur-trainee",
+  "version": "1.1.0",
+  "description": "Traînée lumineuse qui suit le curseur sur tout l'écran Windows",
+  "main": "main.js",
+  "author": "Twixop",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win portable"
+  },
+  "devDependencies": {
+    "electron": "^33.0.0",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "fr.twixop.curseurtrainee",
+    "productName": "Curseur Trainee",
+    "artifactName": "CurseurTrainee.${ext}",
+    "files": [
+      "main.js",
+      "preload.js",
+      "settings.js",
+      "settings.html",
+      "settings-ui.js",
+      "overlay.html",
+      "overlay.js",
+      "icon.png"
+    ],
+    "win": {
+      "target": "portable",
+      "icon": "icon.png",
+      "signAndEditExecutable": false
+    }
+  }
+}

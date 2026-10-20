@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'unsafe-inline'">
+<title>Traînée</title>
+<style>
+  html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: transparent; }
+  canvas { position: fixed; inset: 0; width: 100%; height: 100%; }
+  .debug body { box-shadow: inset 0 0 0 4px #ff0033; } /* mode test : cadre rouge */
+</style>
+</head>
+<body>
+<canvas id="trail"></canvas>
+<script src="overlay.js"></script>
+</body>
+</html>

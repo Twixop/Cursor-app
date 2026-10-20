@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'unsafe-inline'">
+<title>Réglages</title>
+<style>
+  :root { --bg: #0b0d14; --panel: #131829; --line: #262d4a; --text: #d7ddff; --muted: #8a93bf; --accent: #00f0ff; --accent2: #ff2bd6; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--text); font: 14px/1.4 system-ui, 'Segoe UI', sans-serif; }
+  body { padding: 20px 22px 18px; }
+  h1 { margin: 0 0 4px; font-size: 20px; letter-spacing: .04em; }
+  h1 span { background: linear-gradient(90deg, var(--accent), var(--accent2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .sub { margin: 0 0 16px; color: var(--muted); font-size: 12.5px; }
+  section { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; margin-bottom: 12px; }
+  h2 { margin: 0 0 10px; font-size: 11px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+  label { display: block; }
+  select { width: 100%; padding: 8px 10px; background: var(--bg); color: var(--text); border: 1px solid var(--line); border-radius: 8px; font: inherit; }
+  select:focus, button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .colors { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .colors label { font-size: 12.5px; color: var(--muted); }
+  input[type=color] { display: block; width: 100%; height: 36px; margin-top: 6px; padding: 2px; background: var(--bg); border: 1px solid var(--line); border-radius: 8px; cursor: pointer; }
+  input[type=color]:disabled { opacity: .35; cursor: not-allowed; }
+  .check { display: flex; gap: 8px; align-items: center; margin-top: 12px; cursor: pointer; }
+  input[type=checkbox] { accent-color: var(--accent); width: 16px; height: 16px; }
+  .presets { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .preset { border: 1px solid var(--line); border-radius: 999px; padding: 5px 12px 5px 8px; background: var(--bg); color: var(--text); font: inherit; font-size: 12.5px; cursor: pointer; display: inline-flex; align-items: center; gap: 7px; }
+  .preset:hover { border-color: var(--accent); }
+  .preset i { width: 22px; height: 10px; border-radius: 999px; display: inline-block; }
+  .slider { margin-bottom: 12px; }
+  .slider:last-child { margin-bottom: 0; }
+  .slider .head { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 4px; }
+  .slider output { color: var(--accent); font-variant-numeric: tabular-nums; }
+  input[type=range] { width: 100%; accent-color: var(--accent); }
+  .hint { margin: 2px 0 0; font-size: 11.5px; color: var(--muted); }
+  footer { display: flex; gap: 10px; justify-content: flex-end; margin-top: 14px; }
+  button.btn { padding: 8px 16px; border-radius: 8px; border: 1px solid var(--line); background: var(--panel); color: var(--text); font: inherit; cursor: pointer; }
+  button.btn:hover { border-color: var(--accent); }
+  button.primary { background: linear-gradient(90deg, #00b8c4, #c41fa4); border-color: transparent; color: #fff; }
+</style>
+</head>
+<body>
+  <h1>Curseur <span>Traînée</span></h1>
+  <p class="sub">Les changements s'appliquent tout de suite : bougez la souris pour voir l'effet. Ils sont enregistrés automatiquement.</p>
+
+  <section>
+    <h2>Effet</h2>
+    <label>
+      <select id="effect">
+        <option value="line">Ligne lumineuse</option>
+        <option value="dots">Points</option>
+        <option value="sparks">Étincelles</option>
+      </select>
+    </label>
+  </section>
+
+  <section>
+    <h2>Couleurs</h2>
+    <div class="colors">
+      <label>Près du curseur
+        <input type="color" id="colorStart">
+      </label>
+      <label>Bout de la traînée
+        <input type="color" id="colorEnd">
+      </label>
+    </div>
+    <label class="check"><input type="checkbox" id="rainbow"> Arc-en-ciel animé (remplace les couleurs)</label>
+    <div class="presets" id="presets"></div>
+  </section>
+
+  <section>
+    <h2>Forme</h2>
+    <div class="slider">
+      <div class="head"><label for="trailLength">Longueur / durée</label><output id="trailLength-out"></output></div>
+      <input type="range" id="trailLength" min="5" max="200" step="1">
+      <p class="hint">Au-delà de 80, baissez le halo si l'ordinateur ralentit.</p>
+    </div>
+    <div class="slider">
+      <div class="head"><label for="trailWidth">Épaisseur / taille</label><output id="trailWidth-out"></output></div>
+      <input type="range" id="trailWidth" min="2" max="30" step="1">
+    </div>
+    <div class="slider">
+      <div class="head"><label for="glow">Halo lumineux</label><output id="glow-out"></output></div>
+      <input type="range" id="glow" min="0" max="40" step="1">
+      <p class="hint">À 0, le halo est désactivé : l'effet est plus léger pour l'ordinateur.</p>
+    </div>
+  </section>
+
+  <footer>
+    <button class="btn" id="reset" type="button">Réinitialiser</button>
+    <button class="btn primary" id="close" type="button">Fermer</button>
+  </footer>
+
+  <script src="settings-ui.js"></script>
+</body>
+</html>

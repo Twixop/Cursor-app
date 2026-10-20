@@ -1,0 +1,13 @@
+# Dépendances et fichiers générés
+node_modules/
+dist/
+*.log
+
+# Fichiers système
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Éditeurs
+.vscode/
+.idea/
