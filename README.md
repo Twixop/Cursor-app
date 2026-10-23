@@ -2,7 +2,7 @@
 
 Application Windows qui affiche une traînée lumineuse derrière le curseur de la souris, sur tout l'écran et par-dessus toutes les applications. Les clics passent à travers : elle ne gêne rien.
 
-<!-- Ajoutez ici une capture d'écran ou un GIF : ![Aperçu](docs/apercu.gif) -->
+![Aperçu des effets : ligne lumineuse, points, étincelles, arc-en-ciel](docs/apercu.gif)
 
 ## Fonctionnalités
 

@@ -1,6 +1,6 @@
 {
   "name": "curseur-trainee",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Traînée lumineuse qui suit le curseur sur tout l'écran Windows",
   "main": "main.js",
   "author": "Twixop",

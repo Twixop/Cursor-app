@@ -36,7 +36,8 @@
 
   // ---------- État ----------
   const points = [];     // chemin de la souris (ligne, points)
-  let pathLen = 0;       // longueur totale du chemin en pixels
+  let tip = null;        // position exacte de la souris (bout de la traînée)
+  let pathLen = 0;       // longueur du chemin enregistré, en pixels
   const queue = [];      // positions reçues depuis la dernière image
   const particles = [];  // étincelles
   let mx = 0, my = 0;
@@ -66,6 +67,7 @@
     startRGB = hexToRgb(s.colorStart);
     endRGB = hexToRgb(s.colorEnd);
     points.length = 0;     // repart d'une traînée propre avec le nouvel effet
+    tip = null;
     pathLen = 0;
     queue.length = 0;
     particles.length = 0;
@@ -89,25 +91,26 @@
   });
 
   // ---------- Gestion du chemin ----------
+  // `points` ne contient que des points enregistrés, espacés d'au moins `minStep`.
+  // La position exacte de la souris est gardée à part (`tip`) et ajoutée au dessin :
+  // la traînée reste collée au curseur sans accumuler des milliers de points.
   function addPoint(x, y) {
+    const maxLen = S.trailLength * PX_PER_UNIT;
+    // Écart minimal entre deux points : plus grand pour les points (perles espacées)
+    // et pour les très longues traînées (jamais plus de ~400 points)
+    const minStep = Math.max(S.effect === 'dots' ? Math.max(6, S.trailWidth * 1.4) : 2, maxLen / 400);
+    tip = { x, y };
     const n = points.length;
-    // Écart minimal entre deux points : évite des milliers de points à vitesse lente
-    const minStep = S.effect === 'dots' ? Math.max(4, S.trailWidth) : 2;
-    if (n > 0) {
-      const last = points[n - 1];
-      const d = Math.hypot(x - last.x, y - last.y);
-      if (d < minStep && n > 1) {
-        // trop proche : on déplace simplement la tête de la traînée
-        const prev = points[n - 2];
-        pathLen -= dist(prev, last);
-        last.x = x;
-        last.y = y;
-        pathLen += dist(prev, last);
-        return;
-      }
-      pathLen += d;
+    if (n === 0) {
+      points.push({ x, y });
+      return;
     }
-    points.push({ x, y });
+    const last = points[n - 1];
+    const d = Math.hypot(x - last.x, y - last.y);
+    if (d >= minStep) {
+      pathLen += d;
+      points.push({ x, y });
+    }
   }
 
   function removeHead() {
@@ -126,11 +129,14 @@
   // Pour les très longues traînées, on dessine un point sur deux, trois… afin de
   // rester fluide (jamais plus de ~160 éléments dessinés par image).
   function sampled() {
-    const step = Math.max(1, Math.ceil(points.length / 160));
-    if (step === 1) return points;
+    // chemin enregistré + position exacte de la souris au bout
+    const last = points[points.length - 1];
+    const all = tip && last && (tip.x !== last.x || tip.y !== last.y) ? points.concat([tip]) : points;
+    const step = Math.max(1, Math.ceil(all.length / 160));
+    if (step === 1) return all;
     const out = [];
-    for (let i = 0; i < points.length; i += step) out.push(points[i]);
-    if (out[out.length - 1] !== points[points.length - 1]) out.push(points[points.length - 1]);
+    for (let i = 0; i < all.length; i += step) out.push(all[i]);
+    if (out[out.length - 1] !== all[all.length - 1]) out.push(all[all.length - 1]);
     return out;
   }
 
@@ -230,6 +236,7 @@
       moved = false;
     } else if (points.length) {
       // souris immobile : la traînée se résorbe (plus vite quand elle est longue)
+      tip = null;
       const k = Math.max(1, Math.ceil(points.length / 15));
       for (let i = 0; i < k && points.length; i++) removeHead();
     }
